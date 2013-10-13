@@ -1,0 +1,48 @@
+﻿@model WebPoll.Models.PollQuestion
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Demo ePoll</title>
+    <script type="text/javascript" language="javascript">
+        function userPolledAnswer(oThis) {
+            var userAnswer = oThis.value;
+            alert(oThis.value);
+        }
+    </script>
+</head>
+<body>
+    <p>Welcome to PubNub ePoll</p>
+    <div>Today's Poll</div>
+    <table>
+        <tr>
+            <td>@Html.DisplayFor(model => model.Question)</td>
+        </tr>
+        <tr>
+            <td>
+               <ul>
+                    @foreach (var answer in Model.AnswerGroup)
+                    {
+                        <li>
+                            @Html.RadioButtonFor(modelItem => modelItem.AnswerGroup, answer, new { @onclick = "userPolledAnswer(this)" })
+                            @Html.LabelFor(modelItem => modelItem.AnswerGroup, answer)
+                         </li>
+                    }
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+        </tr>
+        
+        </table>
+</body>
+</html>
