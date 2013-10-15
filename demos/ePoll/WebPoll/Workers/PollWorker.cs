@@ -29,9 +29,12 @@ namespace WebPoll.Workers
         static ConcurrentDictionary<string, long> detailedHistoryStartTime = new ConcurrentDictionary<string, long>();
         static ConcurrentDictionary<string, List<string>> channelDetailedHistory = new ConcurrentDictionary<string, List<string>>();
 
-        public PollWorker()
+        static PollWorker()
         {
-            pubnub = new Pubnub("demo", "demo");
+            if (pubnub == null)
+            {
+                pubnub = new Pubnub("demo", "demo");
+            }
         }
 
         public PollQuestion GetActiveQuestion()
@@ -79,7 +82,7 @@ namespace WebPoll.Workers
             messagePublished[pubnubChannel] = false;
 
             pubnub.Publish<string>(pubnubChannel, answer.UserAnswer, PollUserAnswerPublishRegularCallback, PollUserAnswerPublishErrorCallback);
-            mrePublish[pubnubChannel].WaitOne(TimeSpan.FromSeconds(10));
+            mrePublish[pubnubChannel].WaitOne(TimeSpan.FromSeconds(20));
 
             if (messagePublished[pubnubChannel])
             {
@@ -173,12 +176,12 @@ namespace WebPoll.Workers
         {
             if (!string.IsNullOrEmpty(publishResult) && !string.IsNullOrEmpty(publishResult.Trim()))
             {
-                object[] deserializedMessage = pubnub.JsonPluggableLibrary.DeserializeToObject(publishResult) as object[];
-                if (deserializedMessage is object[] && deserializedMessage.Length == 3)
+                List<object> deserializedMessage = pubnub.JsonPluggableLibrary.DeserializeToListOfObject(publishResult) as List<object>;
+                if (deserializedMessage != null && deserializedMessage.Count >= 3)
                 {
                     long statusCode = Int64.Parse(deserializedMessage[0].ToString());
                     string statusMessage = (string)deserializedMessage[1];
-                    string channelName = (string)deserializedMessage[2];
+                    string channelName = (string)deserializedMessage[3];
                     if (statusCode == 1 && statusMessage.ToLower() == "sent")
                     {
                         if (messagePublished.ContainsKey(channelName))
