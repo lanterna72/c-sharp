@@ -23,7 +23,7 @@
             {
                 <div>
                 @Html.Label(item.Key, new { @class = "pollresult-left" }) = 
-                @Html.Label(string.Format("{0}%",PercentFormat(item.Value).ToString()))
+                @String.Format("{0}%", PercentFormat(item.Value))
                 @Html.Label("  ")
                 @Html.Label("(")
                 @Html.Label(pollAnswers.Where(s => s == item.Key).Count().ToString())
@@ -49,7 +49,7 @@
         {
             private double PercentFormat(double value)
             {
-                return value * 100;
+                return value * (double)100.0;
             }
         }
 

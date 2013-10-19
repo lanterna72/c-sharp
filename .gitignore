@@ -37,6 +37,8 @@
 /silverlight/3.4/*/bin/*
 /demos/ePoll/WebPoll/bin/*.pdb
 /demos/ePoll/WebPoll/obj/*
+/demos/ePoll/WebPoll/Properties/PublishProfiles/*
+/demos/ePoll/WebPoll/*.user
 /demos/ePoll/ePoll.Types/Debug/bin/*.pdb
 /demos/ePoll/ePoll.Types/obj/*
 /demos/ePoll/ePoll.Types/Debug/*.pdb

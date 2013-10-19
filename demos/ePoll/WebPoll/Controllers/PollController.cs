@@ -13,7 +13,7 @@ namespace WebPoll.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Welcome");
         }
 
         public ActionResult Welcome()
