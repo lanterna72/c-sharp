@@ -1,0 +1,56 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="PubNub-Console/PubnubCore.cs">
+    <Files>
+      <File FileName="PubNub-Console/Pubnub.cs" Line="181" Column="3" />
+      <File FileName="PubNub-Console/PubnubCore.cs" Line="1435" Column="57" />
+      <File FileName="PubNub-Console/PubnubMonoMac.cs" Line="563" Column="1" />
+      <File FileName="PubNub-Console/PubnubExample.cs" Line="132" Column="28" />
+      <File FileName="../../../../../Volumes/Macintosh/Users/rajatkalsy/Projects/Client/ODesk/pubnub/mono-mac/3.5/PubNub-Messaging/PubNub-Console/Pubnub.cs" Line="3283" Column="41" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="PubNub-Messaging" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="PubnubCore.cs" selected="True" />
+          </Node>
+          <Node name="PubNub-Messaging.Tests" expanded="True">
+            <Node name="References" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True">
+          <Node name="PubNub-Messaging.Tests" expanded="True">
+            <Node name="PubNubMessaging" expanded="True">
+              <Node name="Tests" expanded="True">
+                <Node name="CleanupGrant" expanded="True" />
+                <Node name="WhenSubscribedToAChannel" expanded="True" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ConnectionManagerPad">
+        <State selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Volumes/Macintosh/Users/rajatkalsy/Projects/Client/ODesk/pubnub/mono-mac/3.5/PubNub-Messaging/PubNubTest/WhenSubscribedToAChannel.cs" line="193" column="1" />
+      <Breakpoint file="/Volumes/Macintosh/Users/rajatkalsy/Projects/Client/ODesk/pubnub/mono-mac/3.5/PubNub-Messaging/PubNubTest/Common.cs" line="69" column="1" />
+      <Breakpoint file="/Users/rajat/Projects/pubnub/PubNub-Messaging-baseclass/PubNubTest/CleanupGrant.cs" line="45" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../../3.4/PubNub-Messaging/PubNub-Console/PubnubExample.cs" line="436" offsetX="693" offsetY="6525" expression="lst" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>
