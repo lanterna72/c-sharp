@@ -7,6 +7,7 @@ using System.Net;
 using System.Collections.Generic;
 using Microsoft.Win32;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace PubNubMessaging.Core
 {
@@ -125,6 +126,7 @@ namespace PubNubMessaging.Core
 		#region "Overridden methods"
 		protected override sealed void Init(string publishKey, string subscribeKey, string secretKey, string cipherKey, bool sslOn)
 		{
+
 			#if (USE_JSONFX)
 			LoggingMethod.WriteToLog("Using USE_JSONFX", LoggingMethod.LevelInfo);
 			this.JsonPluggableLibrary = new JsonFXDotNet();
@@ -848,7 +850,226 @@ namespace PubNubMessaging.Core
 		#endif
 		#endregion
 
+	}
+
+	#region "PubnubWebRequestCreator"
+	internal class PubnubWebRequestCreator : PubnubWebRequestCreatorBase
+	{
+
+		public PubnubWebRequestCreator():base()
+		{
+		}
+
+		public PubnubWebRequestCreator(IPubnubUnitTest pubnubUnitTest):base(pubnubUnitTest)
+		{
+		}
+
+		protected override HttpWebRequest SetUserAgent (HttpWebRequest req, bool keepAliveRequest, OperatingSystem userOS)
+		{
+			#if (SILVERLIGHT || WINDOWS_PHONE)
+			req.Headers["UserAgent"] = string.Format("ua_string=({0} {1}) PubNub-csharp/3.5", userOS.Platform.ToString(), userOS.Version.ToString());
+			#else
+			req.KeepAlive = keepAliveRequest;
+			req.UserAgent = string.Format("ua_string=({0}) PubNub-csharp/3.5", userOS.VersionString);
+			#endif
+			return req;
+		}
 
 	}
+	#endregion
+
+	#region "PubnubWebRequest"
+	public class PubnubWebRequest : PubnubWebRequestBase
+	{
+
+		#if ((!__MonoCS__) && (!SILVERLIGHT) && !WINDOWS_PHONE)
+		public override long ContentLength
+		{
+			get
+			{
+				return request.ContentLength;
+			}
+		}
+		#endif
+		#if (!SILVERLIGHT && !WINDOWS_PHONE)
+		private int _timeout;
+		public override int Timeout
+		{
+			get
+			{
+				return _timeout;
+			}
+			set
+			{
+				_timeout = value;
+				if (request != null)
+				{
+					request.Timeout = _timeout;
+				}
+			}
+		}
+
+		public override IWebProxy Proxy
+		{
+			get
+			{
+				return request.Proxy;
+			}
+			set
+			{
+				request.Proxy = value;
+			}
+		}
+
+		public override bool PreAuthenticate
+		{
+			get
+			{
+				return request.PreAuthenticate;
+			}
+			set
+			{
+				request.PreAuthenticate = value;
+			}
+		}
+		public override System.Net.Cache.RequestCachePolicy CachePolicy
+		{
+			get
+			{
+				return request.CachePolicy;
+			}
+		}
+
+		public override string ConnectionGroupName
+		{
+			get
+			{
+				return request.ConnectionGroupName;
+			}
+		}
+		#endif
+
+		#if ((!__MonoCS__) && (!SILVERLIGHT) && !WINDOWS_PHONE)
+		public ServicePoint ServicePoint;
+		#endif
+
+		#if (!SILVERLIGHT && !WINDOWS_PHONE)
+		public override WebResponse GetResponse()
+		{
+			return request.GetResponse();
+		}
+		#endif
+
+		public PubnubWebRequest(HttpWebRequest request):base(request)
+		{
+			#if ((!__MonoCS__) && (!SILVERLIGHT) && !WINDOWS_PHONE)
+			this.ServicePoint = this.request.ServicePoint;
+			#endif
+		}
+		public PubnubWebRequest(HttpWebRequest request, IPubnubUnitTest pubnubUnitTest)
+			:base(request, pubnubUnitTest)
+		{
+			#if ((!__MonoCS__) && (!SILVERLIGHT) && !WINDOWS_PHONE)
+			this.ServicePoint = this.request.ServicePoint;
+			#endif
+		}
+	}
+	#endregion
+
+	#region "PubnubCrypto"
+
+	public class PubnubCrypto: PubnubCryptoBase
+	{
+		public PubnubCrypto(string cipher_key)
+			:base(cipher_key)
+		{
+		}
+
+		protected override string ComputeHashRaw (string input)
+		{
+			#if (SILVERLIGHT || WINDOWS_PHONE || MONOTOUCH || __IOS__ || MONODROID || __ANDROID__ || UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_IOS || UNITY_ANDROID)
+			HashAlgorithm algorithm = new System.Security.Cryptography.SHA256Managed();
+			#else
+			HashAlgorithm algorithm = new SHA256CryptoServiceProvider();
+			#endif
+
+			#if (SILVERLIGHT || WINDOWS_PHONE)
+			Byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
+			#else
+			Byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+			#endif
+			Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
+			return BitConverter.ToString(hashedBytes);
+		}
+
+		protected override string EncryptOrDecrypt(bool type, string plainStr)
+		{
+			{
+				#if (SILVERLIGHT || WINDOWS_PHONE)
+				AesManaged aesEncryption = new AesManaged();
+				aesEncryption.KeySize = 256;
+				aesEncryption.BlockSize = 128;
+				//get ASCII bytes of the string
+				aesEncryption.IV = System.Text.Encoding.UTF8.GetBytes("0123456789012345");
+				aesEncryption.Key = System.Text.Encoding.UTF8.GetBytes(GetEncryptionKey());
+				#else
+				RijndaelManaged aesEncryption = new RijndaelManaged();
+				aesEncryption.KeySize = 256;
+				aesEncryption.BlockSize = 128;
+				//Mode CBC
+				aesEncryption.Mode = CipherMode.CBC;
+				//padding
+				aesEncryption.Padding = PaddingMode.PKCS7;
+				//get ASCII bytes of the string
+				aesEncryption.IV = System.Text.Encoding.ASCII.GetBytes("0123456789012345");
+				aesEncryption.Key = System.Text.Encoding.ASCII.GetBytes(GetEncryptionKey());
+				#endif
+
+				if (type)
+				{
+					ICryptoTransform crypto = aesEncryption.CreateEncryptor();
+					plainStr = EncodeNonAsciiCharacters(plainStr);
+					#if (SILVERLIGHT || WINDOWS_PHONE)
+					byte[] plainText = Encoding.UTF8.GetBytes(plainStr);
+					#else
+					byte[] plainText = Encoding.ASCII.GetBytes(plainStr);
+					#endif
+
+					//encrypt
+					byte[] cipherText = crypto.TransformFinalBlock(plainText, 0, plainText.Length);
+					return Convert.ToBase64String(cipherText);
+				}
+				else
+				{
+					try
+					{
+						ICryptoTransform decrypto = aesEncryption.CreateDecryptor();
+						//decode
+						byte[] decryptedBytes = Convert.FromBase64CharArray(plainStr.ToCharArray(), 0, plainStr.Length);
+
+						//decrypt
+						#if (SILVERLIGHT || WINDOWS_PHONE)
+						var data = decrypto.TransformFinalBlock(decryptedBytes, 0, decryptedBytes.Length);
+						string decrypted = Encoding.UTF8.GetString(data, 0, data.Length);
+						#else
+						string decrypted = System.Text.Encoding.ASCII.GetString(decrypto.TransformFinalBlock(decryptedBytes, 0, decryptedBytes.Length));
+						#endif
+
+						return decrypted;
+					}
+					catch (Exception ex)
+					{
+						LoggingMethod.WriteToLog(string.Format("DateTime {0} Decrypt Error. {1}", DateTime.Now.ToString(), ex.ToString()), LoggingMethod.LevelVerbose);
+						throw ex;
+						//LoggingMethod.WriteToLog(string.Format("DateTime {0} Decrypt Error. {1}", DateTime.Now.ToString(), ex.ToString()), LoggingMethod.LevelVerbose);
+						//return "**DECRYPT ERROR**";
+					}
+				}
+			}
+		}
+	}
+
+	#endregion
+
 }
 

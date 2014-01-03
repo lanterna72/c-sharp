@@ -50,11 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Pubnub.cs" />
     <Compile Include="PubnubExample.cs" />
-    <Compile Include="PubnubCore.cs" />
-    <Compile Include="PubnubMonoMac.cs" />
-    <Compile Include="PubnubUnity.cs" />
+    <Compile Include="Pubnub\Pubnub.cs" />
+    <Compile Include="Pubnub\PubnubCore.cs" />
+    <Compile Include="Pubnub\PubnubMonoMac.cs" />
+    <Compile Include="Pubnub\PubnubUnity.cs" />
+    <Compile Include="Pubnub\MD5.cs" />
+    <Compile Include="Pubnub\LoggingMethod.cs" />
+    <Compile Include="Pubnub\ClientNetworkStatus.cs" />
+    <Compile Include="Pubnub\ReconnectState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -63,5 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />
+    <Folder Include="Pubnub\" />
   </ItemGroup>
 </Project>
