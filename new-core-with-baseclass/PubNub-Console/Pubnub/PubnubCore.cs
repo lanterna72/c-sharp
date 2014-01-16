@@ -2684,8 +2684,11 @@ namespace PubNubMessaging.Core
 							itemMessage.Add(currentChannel.Replace("-pnpres", ""));
 
 							PubnubChannelCallbackKey callbackKey = new PubnubChannelCallbackKey();
-							callbackKey.Channel = (type == ResponseType.Subscribe) ? currentChannel.Replace("-pnpres", "") : currentChannel;
-							callbackKey.Type = (type == ResponseType.Presence && currentChannel.LastIndexOf("-pnpres") == -1) ? ResponseType.Subscribe : type;
+							callbackKey.Channel = currentChannel;
+							callbackKey.Type = (currentChannel.LastIndexOf("-pnpres") == -1) ? ResponseType.Subscribe : ResponseType.Presence;
+
+							//callbackKey.Channel = (type == ResponseType.Subscribe) ? currentChannel.Replace("-pnpres", "") : currentChannel;
+							//callbackKey.Type = (type == ResponseType.Presence && currentChannel.LastIndexOf("-pnpres") == -1) ? ResponseType.Subscribe : type;
 
 							if (_channelCallbacks.Count > 0 && _channelCallbacks.ContainsKey(callbackKey))
 							{
