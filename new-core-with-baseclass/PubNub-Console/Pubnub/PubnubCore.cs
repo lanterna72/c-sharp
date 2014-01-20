@@ -532,7 +532,7 @@ namespace PubNubMessaging.Core
 			}
 		}
 
-		protected virtual void ReconnectNetworkIfOverrideTcpKeepAlive<T> (ResponseType type, string[] channels, object timetoken, Action<T> userCallback, Action<T> connectCallback, Action<PubnubClientError> errorCallback, string multiChannel)
+		protected virtual bool ReconnectNetworkIfOverrideTcpKeepAlive<T> (ResponseType type, string[] channels, object timetoken, Action<T> userCallback, Action<T> connectCallback, Action<PubnubClientError> errorCallback, string multiChannel)
 		{
 			if (overrideTcpKeepAlive) {
 				LoggingMethod.WriteToLog (string.Format ("DateTime {0}, Subscribe - No internet connection for {1}", DateTime.Now.ToString (), multiChannel), LoggingMethod.LevelInfo);
@@ -544,7 +544,9 @@ namespace PubNubMessaging.Core
 				netState.ConnectCallback = connectCallback;
 				netState.Timetoken = timetoken;
 				ReconnectNetwork<T> (netState);
-				return;
+				return true;
+			} else {
+				return false;
 			}
 		}
 
@@ -1528,7 +1530,9 @@ namespace PubNubMessaging.Core
 					return;
 				}
 
-				ReconnectNetworkIfOverrideTcpKeepAlive <T>(type, channels, timetoken, userCallback, connectCallback, errorCallback, multiChannel);
+				if (ReconnectNetworkIfOverrideTcpKeepAlive <T> (type, channels, timetoken, userCallback, connectCallback, errorCallback, multiChannel)) {
+					return;
+				}
 
 			}
 
@@ -3209,7 +3213,7 @@ namespace PubNubMessaging.Core
 				}
 			}
 		}
-		void OnPubnubWebRequestTimeout<T>(System.Object requestState)
+		protected void OnPubnubWebRequestTimeout<T>(System.Object requestState)
 		{
 			RequestState<T> currentState = requestState as RequestState<T>;
 			if (currentState != null && currentState.Response == null && currentState.Request != null)
@@ -3628,7 +3632,7 @@ namespace PubNubMessaging.Core
 		}
 	}
 
-	public class PubnubWebRequestBase : WebRequest
+	public abstract class PubnubWebRequestBase : WebRequest
 	{
 		internal IPubnubUnitTest pubnubUnitTest = null;
 		private static bool simulateNetworkFailForTesting = false;

@@ -269,9 +269,10 @@ namespace PubNubMessaging.Core
 			#endif
 		}
 
-		protected override void ReconnectNetworkIfOverrideTcpKeepAlive<T> (ResponseType type, string[] channels, object timetoken, Action<T> userCallback, Action<T> connectCallback, Action<PubnubClientError> errorCallback, string multiChannel)
+		protected override bool ReconnectNetworkIfOverrideTcpKeepAlive<T> (ResponseType type, string[] channels, object timetoken, Action<T> userCallback, Action<T> connectCallback, Action<PubnubClientError> errorCallback, string multiChannel)
 		{
-			//do nothing for unity
+			//return false for unity
+			return false;
 		}
 
 		protected override void TimerWhenOverrideTcpKeepAlive<T> (Uri requestUri, RequestState<T> pubnubRequestState)
