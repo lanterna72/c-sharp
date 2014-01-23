@@ -31,7 +31,6 @@ using System.Net.NetworkInformation;
 #if (!UNITY_IOS && !UNITY_ANDROID)
 using System.Net.Sockets;
 #endif
-using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 #if (SILVERLIGHT || WINDOWS_PHONE)
@@ -87,14 +86,14 @@ namespace PubNubMessaging.Core
 		#region "Class variables"
 		int _pubnubWebRequestCallbackIntervalInSeconds = 310;
 		int _pubnubOperationTimeoutIntervalInSeconds = 15;
-		protected int _pubnubNetworkTcpCheckIntervalInSeconds = 15;
+		int _pubnubNetworkTcpCheckIntervalInSeconds = 15;
 		int _pubnubNetworkCheckRetries = 50;
-		protected int _pubnubWebRequestRetryIntervalInSeconds = 10;
+		int _pubnubWebRequestRetryIntervalInSeconds = 10;
 		bool _enableResumeOnReconnect = true;
 		protected bool overrideTcpKeepAlive = true;
 		bool _enableJsonEncodingForPublish = true;
-		const LoggingMethod.Level pubnubLogLevel = LoggingMethod.Level.Off;
-		const PubnubErrorFilter.Level errorLevel = PubnubErrorFilter.Level.Info;
+		LoggingMethod.Level _pubnubLogLevel = LoggingMethod.Level.Off;
+		PubnubErrorFilter.Level _errorLevel = PubnubErrorFilter.Level.Info;
 
 		ConcurrentDictionary<string, long> _multiChannelSubscribe = new ConcurrentDictionary<string, long>();
 		ConcurrentDictionary<string, PubnubWebRequest> _channelRequest = new ConcurrentDictionary<string, PubnubWebRequest>();
@@ -291,7 +290,30 @@ namespace PubNubMessaging.Core
 				sessionUUID = value;
 			}
 		}
-		#endregion
+
+        protected LoggingMethod.Level PubnubLogLevel
+        {
+            get
+            {
+                return _pubnubLogLevel;
+            }
+            set
+            {
+                _pubnubLogLevel = value;
+            }
+        }
+        protected PubnubErrorFilter.Level PubnubErrorLevel
+        {
+            get
+            {
+                return _errorLevel;
+            }
+            set
+            {
+                _errorLevel = value;
+            }
+        }
+        #endregion
 
 		#region "Init"
 		/**
@@ -321,27 +343,8 @@ namespace PubNubMessaging.Core
 			this.JsonPluggableLibrary = new NewtonsoftJsonDotNet();
 			#endif
 
-			string configuredLogLevel = ConfigurationManager.AppSettings["PubnubMessaging.LogLevel"];
-			int logLevelValue;
-			if (!Int32.TryParse(configuredLogLevel, out logLevelValue))
-			{
-				LoggingMethod.LogLevel = pubnubLogLevel;
-			}
-			else
-			{
-				LoggingMethod.LogLevel = (LoggingMethod.Level)logLevelValue;
-			}
-
-			string configuredErrorFilter = ConfigurationManager.AppSettings["PubnubMessaging.PubnubErrorFilterLevel"];
-			int errorFilterValue;
-			if (!Int32.TryParse(configuredErrorFilter, out errorFilterValue))
-			{
-				PubnubErrorFilter.ErrorLevel = errorLevel;
-			}
-			else
-			{
-				PubnubErrorFilter.ErrorLevel = (PubnubErrorFilter.Level)errorFilterValue;
-			}
+            LoggingMethod.LogLevel = _pubnubLogLevel;
+            PubnubErrorFilter.ErrorLevel = _errorLevel;
 
 			this.publishKey = publishKey;
 			this.subscribeKey = subscribeKey;
@@ -642,7 +645,7 @@ namespace PubNubMessaging.Core
 						}
 						if (currentPubnubCallback != null && currentPubnubCallback.ErrorCallback != null)
 						{
-							state.Request.Abort(currentPubnubCallback.ErrorCallback, errorLevel);
+							state.Request.Abort(currentPubnubCallback.ErrorCallback, _errorLevel);
 						}
 					}
 				}
@@ -655,7 +658,7 @@ namespace PubNubMessaging.Core
 					PubnubWebRequest currentRequest = _channelRequest[key];
 					if (currentRequest != null)
 					{
-						TerminatePendingWebRequest(currentRequest, state.ErrorCallback);
+						TerminatePendingWebRequest(currentRequest, null);
 					}
 				}
 			}
@@ -665,7 +668,7 @@ namespace PubNubMessaging.Core
 		{
 			if (request != null)
 			{
-				request.Abort(errorCallback, errorLevel);
+				request.Abort(errorCallback, _errorLevel);
 			}
 		}
 
@@ -860,7 +863,7 @@ namespace PubNubMessaging.Core
 				PubnubWebRequest request = (_channelRequest.ContainsKey(multiChannel)) ? _channelRequest[multiChannel] : null;
 				if (request != null)
 				{
-					request.Abort(null, errorLevel);
+					request.Abort(null, _errorLevel);
 
 					LoggingMethod.WriteToLog(string.Format("DateTime {0} TerminateCurrentSubsciberRequest {1}", DateTime.Now.ToString(), request.RequestUri.ToString()), LoggingMethod.LevelInfo);
 				}
@@ -2287,34 +2290,7 @@ namespace PubNubMessaging.Core
 			UrlRequestCommonExceptionHandler<T>(asynchRequestState.Type, asynchRequestState.Channels, asynchRequestState.Timeout, asynchRequestState.UserCallback, asynchRequestState.ConnectCallback, asynchRequestState.ErrorCallback, false);
 		}
 
-		protected virtual bool HandleWebException<T> (WebException webEx, RequestState<T> asynchRequestState, string channel)
-		{
-			bool reconnect = false;
-			if ((webEx.Status == WebExceptionStatus.NameResolutionFailure //No network
-			|| webEx.Status == WebExceptionStatus.ConnectFailure //Sending Keep-alive packet failed (No network)/Server is down.
-			|| webEx.Status == WebExceptionStatus.ServerProtocolViolation //Problem with proxy or ISP
-			|| webEx.Status == WebExceptionStatus.ProtocolError) && (!overrideTcpKeepAlive)) {
-				//internet connection problem.
-				LoggingMethod.WriteToLog (string.Format ("DateTime {0}, _urlRequest - Internet connection problem", DateTime.Now.ToString ()), LoggingMethod.LevelError);
-				if (_channelInternetStatus.ContainsKey (channel) && (asynchRequestState.Type == ResponseType.Subscribe || asynchRequestState.Type == ResponseType.Presence)) {
-					reconnect = true;
-					if (_channelInternetStatus [channel]) {
-						//Reset Retry if previous state is true
-						_channelInternetRetry.AddOrUpdate (channel, 0, (key, oldValue) => 0);
-					}
-					else {
-						_channelInternetRetry.AddOrUpdate (channel, 1, (key, oldValue) => oldValue + 1);
-						string multiChannel = (asynchRequestState.Channels != null) ? string.Join (",", asynchRequestState.Channels) : "";
-						LoggingMethod.WriteToLog (string.Format ("DateTime {0} {1} channel = {2} _urlRequest - Internet connection retry {3} of {4}", DateTime.Now.ToString (), asynchRequestState.Type, multiChannel, _channelInternetRetry [channel], _pubnubNetworkCheckRetries), LoggingMethod.LevelInfo);
-						string message = string.Format ("Detected internet connection problem. Retrying connection attempt {0} of {1}", _channelInternetRetry [channel], _pubnubNetworkCheckRetries);
-						CallErrorCallback (PubnubErrorSeverity.Warn, PubnubMessageSource.Client, multiChannel, asynchRequestState.ErrorCallback, message, PubnubErrorCode.NoInternetRetryConnect, null, null);
-					}
-					_channelInternetStatus [channel] = false;
-				}
-				Thread.Sleep (_pubnubWebRequestRetryIntervalInSeconds * 1000);
-			}
-			return reconnect;
-		}
+		protected abstract bool HandleWebException<T> (WebException webEx, RequestState<T> asynchRequestState, string channel);
 
 		protected void ProcessResponseCallbackWebExceptionHandler<T>(WebException webEx, RequestState<T> asynchRequestState, string channel)
 		{
@@ -2820,7 +2796,7 @@ namespace PubNubMessaging.Core
 		{
 			if (Callback != null && error != null)
 			{
-				if ((int)error.Severity <= (int)errorLevel) //Checks whether the error serverity falls in the range of error filter level
+				if ((int)error.Severity <= (int)_errorLevel) //Checks whether the error serverity falls in the range of error filter level
 				{
 					//Do not send 107 = PubnubObjectDisposedException
 					//Do not send 105 = WebRequestCancelled

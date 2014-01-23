@@ -137,7 +137,7 @@ namespace PubNubMessaging.Core
 			{
 				LoggingMethod.WriteToLog(string.Format("DateTime {0}, _urlRequest - Internet connection problem", DateTime.Now.ToString()), LoggingMethod.LevelError);
 			}
-			Thread.Sleep(_pubnubWebRequestRetryIntervalInSeconds * 1000);
+			Thread.Sleep(NetworkCheckRetryInterval * 1000);
 			return false;
 		}
 
@@ -297,7 +297,7 @@ namespace PubNubMessaging.Core
 				heartBeatTimer.Dispose();
 			}
 			heartBeatTimer = new Timer(new TimerCallback(OnPubnubHeartBeatTimeoutCallback<T>), pubnubRequestState, 0,
-			                           _pubnubNetworkTcpCheckIntervalInSeconds * 1000);
+			                           NetworkCheckRetryInterval * 1000);
 			_channelHeartbeatTimer.AddOrUpdate(requestUri, heartBeatTimer, (key, oldState) => heartBeatTimer);
 			#endif
 		}

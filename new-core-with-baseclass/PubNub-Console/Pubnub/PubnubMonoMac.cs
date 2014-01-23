@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Microsoft.Win32;
 using System.Threading;
 using System.Security.Cryptography;
+using System.Configuration;
 
 namespace PubNubMessaging.Core
 {
@@ -79,6 +80,35 @@ namespace PubNubMessaging.Core
 		#endregion
 
 		#region "Abstract methods"
+		protected override bool HandleWebException<T> (WebException webEx, RequestState<T> asynchRequestState, string channel)
+		{
+			bool reconnect = false;
+			if ((webEx.Status == WebExceptionStatus.NameResolutionFailure //No network
+			     || webEx.Status == WebExceptionStatus.ConnectFailure //Sending Keep-alive packet failed (No network)/Server is down.
+			     || webEx.Status == WebExceptionStatus.ServerProtocolViolation //Problem with proxy or ISP
+			     || webEx.Status == WebExceptionStatus.ProtocolError) && (!overrideTcpKeepAlive)) {
+				//internet connection problem.
+				LoggingMethod.WriteToLog (string.Format ("DateTime {0}, _urlRequest - Internet connection problem", DateTime.Now.ToString ()), LoggingMethod.LevelError);
+				if (_channelInternetStatus.ContainsKey (channel) && (asynchRequestState.Type == ResponseType.Subscribe || asynchRequestState.Type == ResponseType.Presence)) {
+					reconnect = true;
+					if (_channelInternetStatus [channel]) {
+						//Reset Retry if previous state is true
+						_channelInternetRetry.AddOrUpdate (channel, 0, (key, oldValue) => 0);
+					}
+					else {
+						_channelInternetRetry.AddOrUpdate (channel, 1, (key, oldValue) => oldValue + 1);
+						string multiChannel = (asynchRequestState.Channels != null) ? string.Join (",", asynchRequestState.Channels) : "";
+						LoggingMethod.WriteToLog (string.Format ("DateTime {0} {1} channel = {2} _urlRequest - Internet connection retry {3} of {4}", DateTime.Now.ToString (), asynchRequestState.Type, multiChannel, _channelInternetRetry [channel], base.NetworkCheckMaxRetries), LoggingMethod.LevelInfo);
+						string message = string.Format ("Detected internet connection problem. Retrying connection attempt {0} of {1}", _channelInternetRetry [channel], base.NetworkCheckMaxRetries);
+						CallErrorCallback (PubnubErrorSeverity.Warn, PubnubMessageSource.Client, multiChannel, asynchRequestState.ErrorCallback, message, PubnubErrorCode.NoInternetRetryConnect, null, null);
+					}
+					_channelInternetStatus [channel] = false;
+				}
+				Thread.Sleep (base.NetworkCheckRetryInterval * 1000);
+			}
+			return reconnect;
+		}
+
 		protected override PubnubWebRequest SetServicePointSetTcpKeepAlive (PubnubWebRequest request)
 		{
 			//do nothing for mono
@@ -139,6 +169,27 @@ namespace PubNubMessaging.Core
 			#endif
 
 			LoggingMethod.LogLevel = pubnubLogLevel;
+			string configuredLogLevel = ConfigurationManager.AppSettings["PubnubMessaging.LogLevel"];
+			int logLevelValue;
+			if (!Int32.TryParse(configuredLogLevel, out logLevelValue))
+			{
+				base.PubnubLogLevel = pubnubLogLevel;
+			}
+			else
+			{
+				base.PubnubLogLevel = (LoggingMethod.Level)logLevelValue;
+			}
+
+			string configuredErrorFilter = ConfigurationManager.AppSettings["PubnubMessaging.PubnubErrorFilterLevel"];
+			int errorFilterValue;
+			if (!Int32.TryParse(configuredErrorFilter, out errorFilterValue))
+			{
+				base.PubnubErrorLevel = errorLevel;
+			}
+			else
+			{
+				base.PubnubErrorLevel = (PubnubErrorFilter.Level)errorFilterValue;
+			}
 
 			base.publishKey = publishKey;
 			base.subscribeKey = subscribeKey;
@@ -263,7 +314,7 @@ namespace PubNubMessaging.Core
 				heartBeatTimer.Dispose();
 			}
 			heartBeatTimer = new Timer(new TimerCallback(OnPubnubHeartBeatTimeoutCallback<T>), pubnubRequestState, 0,
-			                           _pubnubNetworkTcpCheckIntervalInSeconds * 1000);
+			                           base.NetworkCheckRetryInterval * 1000);
 			_channelHeartbeatTimer.AddOrUpdate(requestUri, heartBeatTimer, (key, oldState) => heartBeatTimer);
 		}
 
@@ -332,8 +383,8 @@ namespace PubNubMessaging.Core
 					try
 					{
 						heartBeatTimer.Change(
-							(-1 == _pubnubNetworkTcpCheckIntervalInSeconds) ? -1 : _pubnubNetworkTcpCheckIntervalInSeconds * 1000,
-							(-1 == _pubnubNetworkTcpCheckIntervalInSeconds) ? -1 : _pubnubNetworkTcpCheckIntervalInSeconds * 1000);
+							(-1 == base.NetworkCheckRetryInterval) ? -1 : base.NetworkCheckRetryInterval * 1000,
+							(-1 == base.NetworkCheckRetryInterval) ? -1 : base.NetworkCheckRetryInterval * 1000);
 					}
 					catch { }
 				}
