@@ -1,4 +1,4 @@
-//Build Date: January 06, 2014
+//Build Date: January 24, 2014
 #if (UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_ANDROID)
 #define USE_JSONFX
 #elif (UNITY_IOS)
@@ -644,7 +644,7 @@ namespace PubNubMessaging.Core
                     PubnubWebRequest currentRequest = _channelRequest[key];
                     if (currentRequest != null)
                     {
-                        TerminatePendingWebRequest(currentRequest, state.ErrorCallback);
+                        TerminatePendingWebRequest(currentRequest, null);
                     }
                 }
             }
@@ -4408,6 +4408,10 @@ namespace PubNubMessaging.Core
                     if (ch == ',' && ignoreComma)
                     {
                         o.Append(ch.ToString());
+                    }
+                    else if (Char.IsSurrogate(ch))
+                    {
+                        o.Append(ch);
                     }
                     else
                     {
