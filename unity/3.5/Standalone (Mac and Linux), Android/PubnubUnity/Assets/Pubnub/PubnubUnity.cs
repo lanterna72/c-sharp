@@ -1,6 +1,11 @@
 //ver3.5.1
-//Build Date: February 20, 2014
+//Build Date: Mar 11, 2014	
+#if (UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_ANDROID)
 #define USE_JSONFX
+#elif (UNITY_IOS)
+#define USE_JSONFX_FOR_UNITY
+//#define USE_MiniJSON
+#endif
 using System;
 using System.Text;
 using System.Net.Security;
@@ -143,7 +148,6 @@ namespace PubNubMessaging.Core
 										o.Append (ToHex (ch / 16));
 										o.Append (ToHex (ch % 16));
 										//UnityEngine.Debug.Log("message1:" + ch.ToString());
-
 								} else {
 										if (ch == ',' && ignoreComma) {
 												o.Append (ch.ToString ());
@@ -230,6 +234,9 @@ namespace PubNubMessaging.Core
 				protected override sealed void SendRequestAndGetResult<T> (Uri requestUri, RequestState<T> pubnubRequestState, PubnubWebRequest request)
 				{
 						#if (UNITY_IOS || UNITY_ANDROID)
+						UnityEngine.Debug.Log("requestUriA"+ requestUri.AbsoluteUri);
+						UnityEngine.Debug.Log("requestUriO"+ requestUri.OriginalString);
+
 						if ((pubnubRequestState.Type == ResponseType.Publish) && (RequestIsUnsafe (requestUri))) {
 								SendRequestUsingUnityWww<T> (requestUri, pubnubRequestState);
 						} else {
@@ -327,7 +334,7 @@ namespace PubNubMessaging.Core
 						base.channelHeartbeatTimer.AddOrUpdate(requestUri, heartBeatTimer, (key, oldState) => heartBeatTimer);
 						#else
 						heartBeatTimer = new Timer (new TimerCallback (OnPubnubHeartBeatTimeoutCallback<T>), pubnubRequestState, 0,
-										HeartbeatInterval * 1000);
+											base.HeartbeatInterval * 1000);
 						base.channelHeartbeatTimer.AddOrUpdate (requestUri, heartBeatTimer, (key, oldState) => heartBeatTimer);
 						#endif
 				}
@@ -715,10 +722,12 @@ namespace PubNubMessaging.Core
 										} 
 								}
 								LoggingMethod.WriteToLog (string.Format ("DateTime: {0}, OnPubnubHeartBeatTimeoutCallbackUnity - Internet connection = {1}, channels={2}", DateTime.Now.ToString (), networkConnection, channel), LoggingMethod.LevelInfo);
-
 								if (networkConnection && !channelNetworkState) {
-										base.channelInternetRetry [channel] = 0;
-										base.channelInternetStatus [channel] = true;
+										//base.channelInternetRetry [channel] = 0;
+										base.channelInternetRetry.AddOrUpdate (channel, 0, (key, oldValue) => 0);
+										//base.channelInternetStatus [channel] = true;
+										base.channelInternetStatus.AddOrUpdate (channel, true, (key, oldValue) => true);
+
 										CallCallback (currentState, string.Format ("[1, \"{0}\"]", "Internet connection available."));
 										LoggingMethod.WriteToLog (string.Format ("DateTime {0} {1} channel = {2} _urlRequest - Internet connection available", DateTime.Now.ToString (), currentState.Type, string.Join (",", currentState.Channels)), LoggingMethod.LevelInfo);
 								}
@@ -740,6 +749,22 @@ namespace PubNubMessaging.Core
 										break;
 								}
 						}
+
+						//emoji fix
+						requestMessage = new StringBuilder ();
+						string[] requestUriSegments = requestUri.OriginalString.Split ('/');
+						if (requestUriSegments.Length > 9) {
+								for (int i = 9; i < requestUriSegments.Length; i++) {
+										requestMessage.Append (requestUriSegments [i]);
+								}
+						}
+						foreach (char ch in requestMessage.ToString().ToCharArray()) {
+								if (Char.IsSurrogate (ch)) {
+										isUnsafe = true;
+										break;
+								} 
+						}
+
 						return isUnsafe;
 				}
 				#endif
@@ -840,8 +865,8 @@ namespace PubNubMessaging.Core
 								int bytesRead = netStream.EndRead (asynchronousResult);
 
 								if (bytesRead > 0) {
-										asynchStateObject.sb.Append (Encoding.ASCII.GetString (asynchStateObject.buffer, 0, bytesRead));
-
+										//asynchStateObject.sb.Append (Encoding.ASCII.GetString (asynchStateObject.buffer, 0, bytesRead));
+										asynchStateObject.sb.Append (Encoding.UTF8.GetString (asynchStateObject.buffer, 0, bytesRead));
 										netStream.BeginRead (asynchStateObject.buffer, 0, StateObject<T>.BufferSize,
 												new AsyncCallback (ConnectToHostAndSendRequestCallback<T>), asynchStateObject);
 								} else {
@@ -1019,8 +1044,8 @@ namespace PubNubMessaging.Core
 										int bytesRead = netStream.EndRead (asynchronousResult);
 
 										if (bytesRead > 0) {
-												state.sb.Append (Encoding.ASCII.GetString (state.buffer, 0, bytesRead));
-
+												//state.sb.Append (Encoding.ASCII.GetString (state.buffer, 0, bytesRead));
+												state.sb.Append (Encoding.UTF8.GetString (state.buffer, 0, bytesRead));
 												netStream.BeginRead (state.buffer, 0, StateObject<T>.BufferSize,
 														new AsyncCallback (SendRequestUsingTcpClientCallback<T>), state);
 										} else {

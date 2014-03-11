@@ -1,4 +1,4 @@
-//Build Date: February 25, 2014
+//Build Date: Mar 11, 2014
 #region "Header"
 #if (UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_ANDROID)
 #define USE_JSONFX
@@ -1108,6 +1108,7 @@ namespace PubNubMessaging.Core
         protected virtual string EncodeUricomponent (string s, ResponseType type, bool ignoreComma)
         {
             string encodedUri = "";
+
             StringBuilder o = new StringBuilder ();
             foreach (char ch in s) {
                 if (IsUnsafe (ch, ignoreComma)) {
@@ -1118,7 +1119,7 @@ namespace PubNubMessaging.Core
                     if (ch == ',' && ignoreComma) {
                         o.Append (ch.ToString ());
                     } else if (Char.IsSurrogate (ch)) {
-                        o.Append (ch);
+						o.Append (ch.ToString());
                     } else {
                         string escapeChar = System.Uri.EscapeDataString (ch.ToString ());
                         o.Append (escapeChar);
@@ -3530,16 +3531,17 @@ namespace PubNubMessaging.Core
 			return PubnubCryptoBase.ConvertHexToUnicodeChars(json);
 #else
             string json = "";
-            var resolver = new CombinedResolverStrategy(new DataContractResolverStrategy());
-            DataWriterSettings dataWriterSettings = new DataWriterSettings(resolver);
-            var writer = new JsonFx.Json.JsonWriter(dataWriterSettings, new string[] { "PubnubClientError" });
-            json = writer.Write(objectToSerialize);
-            return json;
+			var resolver = new JsonFx.Serialization.Resolvers.CombinedResolverStrategy(new JsonFx.Serialization.Resolvers.DataContractResolverStrategy());
+			JsonFx.Serialization.DataWriterSettings dataWriterSettings = new JsonFx.Serialization.DataWriterSettings(resolver);
+			var writer = new JsonFx.Json.JsonWriter(dataWriterSettings, new string[] { "PubnubClientError" });
+			json = writer.Write(objectToSerialize);
+			return json;
             #endif
         }
 
         public List<object> DeserializeToListOfObject (string jsonString)
         {
+			jsonString = PubnubCryptoBase.ConvertHexToUnicodeChars (jsonString);
             var reader = new JsonFx.Json.JsonReader ();
             var output = reader.Read<List<object>> (jsonString);
             return output;
@@ -3547,6 +3549,7 @@ namespace PubNubMessaging.Core
 
         public object DeserializeToObject (string jsonString)
         {
+			jsonString = PubnubCryptoBase.ConvertHexToUnicodeChars (jsonString);
             var reader = new JsonFx.Json.JsonReader ();
             var output = reader.Read<object> (jsonString);
             return output;

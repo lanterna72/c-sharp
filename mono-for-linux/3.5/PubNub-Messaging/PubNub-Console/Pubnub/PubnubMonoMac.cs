@@ -156,6 +156,7 @@ namespace PubNubMessaging.Core
         {
             string encodedUri = "";
             StringBuilder o = new StringBuilder ();
+
             foreach (char ch in s) {
                 if (IsUnsafe (ch, ignoreComma)) {
                     o.Append ('%');
@@ -381,6 +382,8 @@ namespace PubNubMessaging.Core
                     LoggingMethod.WriteToLog (string.Format ("DateTime {0}, Disabled Timer for heartbeat ", DateTime.Now.ToString ()), LoggingMethod.LevelInfo);
                 }
             } else if (e.Mode == PowerModes.Resume) {
+				
+				
                 PubnubCore.pubnetSystemActive = true;
                 ClientNetworkStatus.MachineSuspendMode = false;
                 PubnubWebRequest.MachineSuspendMode = false;    
@@ -412,11 +415,27 @@ namespace PubNubMessaging.Core
                 }
             }
             foreach (char ch in requestMessage.ToString().ToCharArray()) {
-                if (" ~`!@#$^&*()+=[]\\{}|;':\"./<>?".IndexOf (ch) >= 0) {
-                    isUnsafe = true;
-                    break;
-                }
+				if (" ~`!@#$^&*()+=[]\\{}|;':\"./<>?".IndexOf (ch) >= 0) {
+					isUnsafe = true;
+					break;
+				} 
             }
+
+            //emoji fix
+		    requestMessage = new StringBuilder ();
+		    string[] requestUriSegments = requestUri.OriginalString.Split ('/');
+		    if (requestUriSegments.Length > 9) {
+				for (int i = 9; i < requestUriSegments.Length; i++) {
+					requestMessage.Append (requestUriSegments [i]);
+				}
+			}
+			foreach (char ch in requestMessage.ToString().ToCharArray()) {
+				if (Char.IsSurrogate (ch)) {
+					isUnsafe = true;
+					break;
+				} 
+			}
+
             return isUnsafe;
         }
         #endif

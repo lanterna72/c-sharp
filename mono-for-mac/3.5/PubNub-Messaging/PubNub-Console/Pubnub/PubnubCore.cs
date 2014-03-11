@@ -1,4 +1,4 @@
-//Build Date: February 25, 2014
+//Build Date: Mar 3, 2014
 #region "Header"
 #if (UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_ANDROID)
 #define USE_JSONFX
@@ -1108,6 +1108,7 @@ namespace PubNubMessaging.Core
         protected virtual string EncodeUricomponent (string s, ResponseType type, bool ignoreComma)
         {
             string encodedUri = "";
+
             StringBuilder o = new StringBuilder ();
             foreach (char ch in s) {
                 if (IsUnsafe (ch, ignoreComma)) {
@@ -1118,7 +1119,7 @@ namespace PubNubMessaging.Core
                     if (ch == ',' && ignoreComma) {
                         o.Append (ch.ToString ());
                     } else if (Char.IsSurrogate (ch)) {
-                        o.Append (ch);
+						o.Append (ch.ToString());
                     } else {
                         string escapeChar = System.Uri.EscapeDataString (ch.ToString ());
                         o.Append (escapeChar);
@@ -2211,38 +2212,38 @@ namespace PubNubMessaging.Core
                     ProcessResponseCallbackWebExceptionHandler<T> (webEx, asynchRequestState, channel);
                 }
             } catch (Exception ex) {
-                if (!pubnetSystemActive && ex.Message.IndexOf ("The IAsyncResult object was not returned from the corresponding asynchronous method on this class.") == -1) {
-                    if (asynchRequestState.Channels != null) {
-                        if (asynchRequestState.Type == ResponseType.Subscribe
-                                              || asynchRequestState.Type == ResponseType.Presence) {
-                            for (int index = 0; index < asynchRequestState.Channels.Length; index++) {
-                                string activeChannel = asynchRequestState.Channels [index].ToString ();
+				if (!pubnetSystemActive && ex.Message.IndexOf ("The IAsyncResult object was not returned from the corresponding asynchronous method on this class.") == -1) {
+					if (asynchRequestState.Channels != null) {
+						if (asynchRequestState.Type == ResponseType.Subscribe
+						                      || asynchRequestState.Type == ResponseType.Presence) {
+							for (int index = 0; index < asynchRequestState.Channels.Length; index++) {
+								string activeChannel = asynchRequestState.Channels [index].ToString ();
 
-                                PubnubChannelCallbackKey callbackKey = new PubnubChannelCallbackKey ();
-                                callbackKey.Channel = activeChannel;
-                                callbackKey.Type = asynchRequestState.Type;
+								PubnubChannelCallbackKey callbackKey = new PubnubChannelCallbackKey ();
+								callbackKey.Channel = activeChannel;
+								callbackKey.Type = asynchRequestState.Type;
 
-                                if (_channelCallbacks.Count > 0 && _channelCallbacks.ContainsKey (callbackKey)) {
-                                    object callbackObject;
-                                    bool channelAvailable = _channelCallbacks.TryGetValue (callbackKey, out callbackObject);
-                                    PubnubChannelCallback<T> currentPubnubCallback = null;
-                                    if (channelAvailable) {
-                                        currentPubnubCallback = callbackObject as PubnubChannelCallback<T>;
-                                    }
-                                    if (currentPubnubCallback != null && currentPubnubCallback.ErrorCallback != null) {
-                                        CallErrorCallback (PubnubErrorSeverity.Critical, PubnubMessageSource.Client,
-                                            activeChannel, currentPubnubCallback.ErrorCallback, ex, asynchRequestState.Request, asynchRequestState.Response);
+								if (_channelCallbacks.Count > 0 && _channelCallbacks.ContainsKey (callbackKey)) {
+									object callbackObject;
+									bool channelAvailable = _channelCallbacks.TryGetValue (callbackKey, out callbackObject);
+									PubnubChannelCallback<T> currentPubnubCallback = null;
+									if (channelAvailable) {
+										currentPubnubCallback = callbackObject as PubnubChannelCallback<T>;
+									}
+									if (currentPubnubCallback != null && currentPubnubCallback.ErrorCallback != null) {
+										CallErrorCallback (PubnubErrorSeverity.Critical, PubnubMessageSource.Client,
+											activeChannel, currentPubnubCallback.ErrorCallback, ex, asynchRequestState.Request, asynchRequestState.Response);
 
-                                    }
-                                }
-                            }
-                        } else {
-                            CallErrorCallback (PubnubErrorSeverity.Critical, PubnubMessageSource.Client,
-                                channel, asynchRequestState.ErrorCallback, ex, asynchRequestState.Request, asynchRequestState.Response);
-                        }
+									}
+								}
+							}
+						} else {
+							CallErrorCallback (PubnubErrorSeverity.Critical, PubnubMessageSource.Client,
+								channel, asynchRequestState.ErrorCallback, ex, asynchRequestState.Request, asynchRequestState.Response);
+						}
 
-                    }
-                }
+					}
+				}
                 ProcessResponseCallbackExceptionHandler<T> (ex, asynchRequestState);
             }
         }
@@ -2960,7 +2961,6 @@ namespace PubNubMessaging.Core
                 if (!_channelRequest.ContainsKey (channel) && (pubnubRequestState.Type == ResponseType.Subscribe || pubnubRequestState.Type == ResponseType.Presence)) {
                     return false;
                 }
-
                 // Create Request
                 PubnubWebRequestCreator requestCreator = new PubnubWebRequestCreator (_pubnubUnitTest);
                 PubnubWebRequest request = (PubnubWebRequest)requestCreator.Create (requestUri);
@@ -3013,7 +3013,6 @@ namespace PubNubMessaging.Core
 
             // Add Origin To The Request
             url.Append (this._origin);
-
             // Generate URL with UTF-8 Encoding
             for (int componentIndex = 0; componentIndex < urlComponents.Count; componentIndex++) {
                 url.Append ("/");
@@ -3054,7 +3053,6 @@ namespace PubNubMessaging.Core
             #endif
 
             Uri requestUri = new Uri (url.ToString ());
-
             if ((type == ResponseType.Publish || type == ResponseType.Subscribe || type == ResponseType.Presence)) {
                 ForceCanonicalPathAndQuery (requestUri);
             }
@@ -3523,23 +3521,23 @@ namespace PubNubMessaging.Core
 
         public string SerializeToJsonString (object objectToSerialize)
         {
-#if(__MonoCS__)
-            var writer = new JsonFx.Json.JsonWriter ();
-            string json = writer.Write (objectToSerialize);
-
+			#if(__MonoCS__)
+			var writer = new JsonFx.Json.JsonWriter();
+			string json = writer.Write(objectToSerialize);
 			return PubnubCryptoBase.ConvertHexToUnicodeChars(json);
-#else
+			#else
             string json = "";
-            var resolver = new CombinedResolverStrategy(new DataContractResolverStrategy());
-            DataWriterSettings dataWriterSettings = new DataWriterSettings(resolver);
+            var resolver = new JsonFx.Serialization.Resolvers.CombinedResolverStrategy(new JsonFx.Serialization.Resolvers.DataContractResolverStrategy());
+            JsonFx.Serialization.DataWriterSettings dataWriterSettings = new JsonFx.Serialization.DataWriterSettings(resolver);
             var writer = new JsonFx.Json.JsonWriter(dataWriterSettings, new string[] { "PubnubClientError" });
-            json = writer.Write(objectToSerialize);
+			json = writer.Write(objectToSerialize);
             return json;
-            #endif
+			#endif
         }
 
         public List<object> DeserializeToListOfObject (string jsonString)
         {
+			jsonString = PubnubCryptoBase.ConvertHexToUnicodeChars (jsonString);
             var reader = new JsonFx.Json.JsonReader ();
             var output = reader.Read<List<object>> (jsonString);
             return output;
@@ -3547,6 +3545,7 @@ namespace PubNubMessaging.Core
 
         public object DeserializeToObject (string jsonString)
         {
+			jsonString = PubnubCryptoBase.ConvertHexToUnicodeChars (jsonString);
             var reader = new JsonFx.Json.JsonReader ();
             var output = reader.Read<object> (jsonString);
             return output;
