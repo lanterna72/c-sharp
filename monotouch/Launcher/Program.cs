@@ -18,10 +18,8 @@ namespace Launcher
             }
             //Process.Start (new ProcessStartInfo (exec){ UseShellExecute = false });
 
-
-            Process p = new Process();                        
-			p.Start ("/bin/chmod", "+x /Users/Shared/Jenkins/git/c-sharp/monotouch/Launcher/bin/Debug/launch.sh");
-			p = new Process();     
+			Process.Start ("/bin/chmod", "+x /Users/Shared/Jenkins/git/c-sharp/monotouch/Launcher/bin/Debug/launch.sh");
+			Process p = new Process();                        
             //p.StartInfo.FileName = "/Applications/X code.app/Contents/Developer/usr/bin/make";
             //p.StartInfo.Arguments = @"-C '/Users/rajat-ml/Projects/Xamarin.iOS/3.5/Pubnub-Messaging modified tests/Touch.Unit' run run-simulator";
             //p.StartInfo.FileName = "mono";
