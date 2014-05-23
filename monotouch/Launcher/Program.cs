@@ -29,7 +29,7 @@ namespace Launcher
             // Cl 2 Touch.Server.exe
             // cl 3 TouchUnit.app
             // Cl 4 exportFile
-			p.StartInfo.FileName = "/Users/Shared/Jenkins/git/c-sharp/monotouch/Launcher/launch.sh";
+			p.StartInfo.FileName = "/Users/Shared/Jenkins/git/c-sharp/monotouch/Launcher/Debug/bin/launch.sh";
             p.StartInfo.UseShellExecute = false;
             p.Start();
 
