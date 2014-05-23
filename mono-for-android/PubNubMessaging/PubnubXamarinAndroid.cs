@@ -673,7 +673,7 @@ namespace PubNubMessaging.Core
                            System.Security.Cryptography.X509Certificates.X509Chain chain,
                            System.Net.Security.SslPolicyErrors sslPolicyErrors)
         {
-            var sslTrustManager = (IX509TrustManager)typeof(AndroidEnvironment)
+			/*var sslTrustManager = (IX509TrustManager)typeof(AndroidEnvironment)
 					.GetField ("sslTrustManager",
                                System.Reflection.BindingFlags.NonPublic |
                                System.Reflection.BindingFlags.Static)
@@ -704,7 +704,8 @@ namespace PubNubMessaging.Core
                 return true;
             } catch (Exception e) {
                 throw new Exception ("SSL error");
-            }
+            }*/
+			return true;
         }
         #endif
         #endregion
