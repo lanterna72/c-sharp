@@ -409,7 +409,7 @@ namespace PubNubMessaging.Tests
             Assert.AreEqual(false, pubnub.Publish(channel, message, common.DisplayReturnMessage, common.DisplayReturnMessage));
         }
 
-        [Test]
+        //[Test]
         public void ThenLargeMessageShoudFailWithMessageTooLargeInfo()
         {
             Pubnub pubnub = new Pubnub(
