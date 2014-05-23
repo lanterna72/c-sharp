@@ -56,17 +56,9 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="EncryptionTests.cs" />
-    <Compile Include="WhenDetailedHistoryIsRequested.cs" />
-    <Compile Include="WhenAClientIsPresented.cs" />
-    <Compile Include="WhenSubscribedToAChannel.cs" />
-    <Compile Include="WhenGetRequestServerTime.cs" />
-    <Compile Include="WhenAMessageIsPublished.cs" />
     <Compile Include="PubnubUnitTest.cs" />
-    <Compile Include="WhenUnsubscribedToAChannel.cs" />
     <Compile Include="GenerateSampleGrant.cs" />
     <Compile Include="PubnubCommon.cs" />
-    <Compile Include="WhenSubscribedToAChannel2.cs" />
-    <Compile Include="WhenSubscribedToAChannel3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

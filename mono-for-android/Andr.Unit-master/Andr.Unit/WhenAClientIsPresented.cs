@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 #endif
 namespace PubNubMessaging.Tests
 {
-    [TestFixture]
+	[TestFixture]
     public class WhenAClientIsPresented
     {
         [Test]
