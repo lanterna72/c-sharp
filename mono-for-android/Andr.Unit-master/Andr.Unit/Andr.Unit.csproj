@@ -57,7 +57,6 @@
     <Compile Include="Common.cs" />
     <Compile Include="EncryptionTests.cs" />
     <Compile Include="PubnubUnitTest.cs" />
-    <Compile Include="GenerateSampleGrant.cs" />
     <Compile Include="PubnubCommon.cs" />
   </ItemGroup>
   <ItemGroup>
