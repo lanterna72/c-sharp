@@ -11,7 +11,7 @@ namespace Launcher
         public static void Main (string[] args)
         {
             string exec = @" ";
-            string exportFile = @"/Users/rajat-ml/Projects/Xamarin.iOS/3.5/Pubnub-Messaging-modified-tests/Touch.Unit/sim-results.log";
+			string exportFile = @"/Users/Shared/Jenkins/tests/sim-results.log";
             FileInfo lastReport= new FileInfo(exportFile);
             if (lastReport.Exists) {
                 lastReport.Delete ();
@@ -29,7 +29,7 @@ namespace Launcher
             // Cl 2 Touch.Server.exe
             // cl 3 TouchUnit.app
             // Cl 4 exportFile
-            p.StartInfo.FileName = "/Users/rajat-ml/Projects/Jenkins/launch.sh";
+			p.StartInfo.FileName = "/Users/Shared/Jenkins/git/c-sharp/monotouch/Launcher/launch.sh";
             p.StartInfo.UseShellExecute = false;
             p.Start();
 
