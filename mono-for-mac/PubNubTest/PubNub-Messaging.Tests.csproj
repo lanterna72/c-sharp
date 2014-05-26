@@ -52,6 +52,8 @@
     <Compile Include="PubnubCommon.cs" />
     <Compile Include="WhenSubscribedToAChannel.cs" />
     <Compile Include="WhenDetailedHistoryIsRequested.cs" />
+    <Compile Include="WhenSubscribedToAChannel2.cs" />
+    <Compile Include="WhenSubscribedToAChannel3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
