@@ -136,7 +136,7 @@ namespace PubNubMessaging.Tests
             commonSubscribe.Response = null;
 
             common.WaitForResponse(30);
-			Thread.Sleep(2000);
+            Thread.Sleep(3000);
             string response = "";
             if (common.Response == null)
                 {
