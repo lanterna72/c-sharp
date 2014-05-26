@@ -50,8 +50,8 @@
     <Compile Include="Common.cs" />
     <Compile Include="PubnubUnitTest.cs" />
     <Compile Include="PubnubCommon.cs" />
-    <Compile Include="WhenSubscribedToAChannel2.cs" />
-    <Compile Include="WhenSubscribedToAChannel3.cs" />
+    <Compile Include="WhenSubscribedToAChannel.cs" />
+    <Compile Include="WhenDetailedHistoryIsRequested.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
