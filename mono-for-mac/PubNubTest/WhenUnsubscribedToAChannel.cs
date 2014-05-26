@@ -125,7 +125,7 @@ namespace PubNubMessaging.Tests
             pubnub.PubnubUnitTest = common.CreateUnitTestInstance("WhenAClientIsPresented", "ThenPresenceShouldReturnReceivedMessage");
 
             pubnub.Presence<string>(channel, common.DisplayReturnMessage, common.DisplayReturnMessage, common.DisplayErrorMessage);
-            Thread.Sleep(3000);
+			Thread.Sleep(2000);
             Common commonSubscribe = new Common();
             common.DeliveryStatus = false;
             common.Response = null;
@@ -136,7 +136,7 @@ namespace PubNubMessaging.Tests
             commonSubscribe.Response = null;
 
             common.WaitForResponse(30);
-
+			Thread.Sleep(2000);
             string response = "";
             if (common.Response == null)
                 {

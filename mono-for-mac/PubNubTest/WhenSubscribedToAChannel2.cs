@@ -16,7 +16,7 @@ namespace PubNubMessaging.Tests
         void SubscribePublishAndParse (string message, Pubnub pubnub, Common common, string channel)
         {
             pubnub.Subscribe<string> (channel, common.DisplayReturnMessage, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy); 
-            Thread.Sleep (1500);
+			Thread.Sleep (2000);
 
             pubnub.Publish (channel, message, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy);
 

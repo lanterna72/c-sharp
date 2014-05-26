@@ -183,7 +183,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoCipher()
         {
             Pubnub pubnub = new Pubnub(
@@ -204,7 +204,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoCipherSecret()
         {
             Pubnub pubnub = new Pubnub(
@@ -225,7 +225,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoCipherSecretSSL()
         {
             Pubnub pubnub = new Pubnub(
@@ -246,7 +246,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoCipherSSL()
         {
             Pubnub pubnub = new Pubnub(
@@ -267,7 +267,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoSecret()
         {
             Pubnub pubnub = new Pubnub(
@@ -288,7 +288,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoSecretSSL()
         {
             Pubnub pubnub = new Pubnub(
@@ -309,7 +309,7 @@ namespace PubNubMessaging.Tests
             pubnub.EndPendingRequests();
         }
 
-        //[Test]
+        [Test]
         public void IfHereNowIsCalledThenItShouldReturnInfoSSL()
         {
             Pubnub pubnub = new Pubnub(
