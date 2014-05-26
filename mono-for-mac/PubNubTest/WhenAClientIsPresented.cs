@@ -347,7 +347,7 @@ namespace PubNubMessaging.Tests
 
             pubnub.HereNow(channel, userCallback, userCallback);
 
-            pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
+            //pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
         }
 
         public void ParseResponse(object commonResponse, Pubnub pubnub)
