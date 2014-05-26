@@ -54,6 +54,10 @@
     <Compile Include="WhenDetailedHistoryIsRequested.cs" />
     <Compile Include="WhenSubscribedToAChannel2.cs" />
     <Compile Include="WhenSubscribedToAChannel3.cs" />
+    <Compile Include="WhenAClientIsPresented.cs" />
+    <Compile Include="WhenUnsubscribedToAChannel.cs" />
+    <Compile Include="WhenGetRequestServerTime.cs" />
+    <Compile Include="WhenAMessageIsPublished.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
