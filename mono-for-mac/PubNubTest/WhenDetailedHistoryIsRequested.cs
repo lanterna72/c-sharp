@@ -21,7 +21,7 @@ namespace PubNubMessaging.Tests
                           "",
                           false
                       );
-            string channel = "hello_world";
+            string channel = "hello_world_de1";
             string message = "Test Message";
       
             Common common = new Common();
@@ -121,7 +121,7 @@ namespace PubNubMessaging.Tests
                           "",
                           "",
                           false);
-            string channel = "hello_world";
+            string channel = "hello_world_de2";
 
             string message = "Test Message";
 
@@ -154,7 +154,7 @@ namespace PubNubMessaging.Tests
                           "",
                           "enigma",
                           false);
-            string channel = "hello_world";
+            string channel = "hello_world_de3";
 
             string message = "Test Message";
 
@@ -188,7 +188,7 @@ namespace PubNubMessaging.Tests
                           "enigma",
                           false);
       
-            string channel = "hello_world";
+            string channel = "hello_world_de4";
       
             int totalMessages = 10;
       
@@ -256,7 +256,7 @@ namespace PubNubMessaging.Tests
                           "",
                           false);
       
-            string channel = "hello_world";
+            string channel = "hello_world_de5";
       
             int totalMessages = 10;
       
@@ -323,7 +323,7 @@ namespace PubNubMessaging.Tests
                 "",
                 false);
 
-            string channel = "hello_world";
+            string channel = "hello_world_de6";
 
             int totalMessages = 10;
 
@@ -390,7 +390,7 @@ namespace PubNubMessaging.Tests
                 "enigma",
                 false);
 
-            string channel = "hello_world";
+            string channel = "hello_world_de7";
 
             int totalMessages = 10;
 
@@ -458,7 +458,7 @@ namespace PubNubMessaging.Tests
                 "",
                 false);
 
-            string channel = "hello_world";
+            string channel = "hello_world_de8";
             int totalMessages = 10;
 
             Common common = new Common();
@@ -498,7 +498,7 @@ namespace PubNubMessaging.Tests
                 "",
                 "enigma",
                 false);
-            string channel = "hello_world";
+            string channel = "hello_world_de9";
 
             int totalMessages = 10;
 
@@ -540,7 +540,7 @@ namespace PubNubMessaging.Tests
                 "enigma",
                 true);
 
-            string channel = "hello_world2";
+            string channel = "hello_world_de10";
 
             int totalMessages = 10;
 
@@ -608,7 +608,7 @@ namespace PubNubMessaging.Tests
                 "",
                 true);
 
-            string channel = "hello_world";
+            string channel = "hello_world_de11";
 
             int totalMessages = 10;
 
@@ -675,7 +675,7 @@ namespace PubNubMessaging.Tests
                 "",
                 true);
 
-            string channel = "hello_world";
+            string channel = "hello_world_de12";
 
             int totalMessages = 10;
 
@@ -742,7 +742,7 @@ namespace PubNubMessaging.Tests
                 "enigma",
 				true);
 
-            string channel = "hello_world2";
+            string channel = "hello_world2_de13";
 
             int totalMessages = 10;
 
@@ -810,7 +810,7 @@ namespace PubNubMessaging.Tests
                 "",
                 true);
 
-            string channel = "hello_world";
+            string channel = "hello_world_de14";
             int totalMessages = 10;
 
             Common common = new Common();
@@ -850,7 +850,7 @@ namespace PubNubMessaging.Tests
                 "",
                 "enigma",
 				true);
-            string channel = "hello_world2";
+            string channel = "hello_world_de15";
 
             int totalMessages = 10;
 

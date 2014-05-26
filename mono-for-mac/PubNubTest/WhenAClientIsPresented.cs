@@ -421,7 +421,7 @@ namespace PubNubMessaging.Tests
             common.DeliveryStatus = false;
             common.Response = null;
 
-            string channel = "testChannel";
+            string channel = "testChannelhn1";
             string testname = "IfHereNowIsCalledWithState";
 
             HereNowWithState<string>(pubnub, channel, testname, common.DisplayReturnMessage, common.DisplayErrorMessage);
@@ -440,9 +440,9 @@ namespace PubNubMessaging.Tests
                     Assert.Fail("Null response");
                 } else
                 {
+                    Console.WriteLine("response:" + commonResponse.ToString()); 
                     if (commonResponse.ToString().Contains(userState))
                         {
-                            Console.WriteLine("response:" + commonResponse.ToString()); 
                             Assert.True(true, "Test passed:" + testname);
                         } else
                         {
