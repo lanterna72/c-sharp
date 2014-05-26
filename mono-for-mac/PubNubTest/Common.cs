@@ -35,7 +35,7 @@ namespace PubNubMessaging.Tests
         /// or timeout occurs
         /// </summary>
         /// <param name="countdownSeconds">seconds to timeout</param>
-        public void WaitForResponse(int countdownSeconds = 30)
+        public void WaitForResponse(int countdownSeconds = 45)
         {
             Timer timer = new Timer();
             DateTime start = DateTime.UtcNow; 
