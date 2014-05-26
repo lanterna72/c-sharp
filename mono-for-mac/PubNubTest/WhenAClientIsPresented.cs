@@ -334,7 +334,7 @@ namespace PubNubMessaging.Tests
                      Action<object> userCallback)
         {
             Random r = new Random();
-            string channel = "hello_world" + r.Next(100);
+            string channel = "hello_world_hn" + r.Next(100);
 
             Common commonSubscribe = new Common();
             pubnub.Subscribe<string>(channel, commonSubscribe.DisplayReturnMessage, commonSubscribe.DisplayReturnMessage, commonSubscribe.DisplayErrorMessage);
@@ -342,9 +342,8 @@ namespace PubNubMessaging.Tests
             commonSubscribe.DeliveryStatus = false;
             commonSubscribe.Response = null;
 
-
 			commonSubscribe.WaitForResponse(45);
-
+            Thread.Sleep(3000);
             pubnub.HereNow(channel, userCallback, userCallback);
 
             //pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
@@ -477,7 +476,7 @@ namespace PubNubMessaging.Tests
             string json = pubnub.GetLocalUserState(channel);
 			pubnub.SetUserState<string>(channel, "{\"testkey\": \"testval\"}", commonSubscribe.DisplayReturnMessage, commonSubscribe.DisplayErrorMessage);
             commonSubscribe.WaitForResponse(30);
-
+            Thread.Sleep(3000);
             pubnub.HereNow<T>(channel, true, true, userCallback, errorCallback);
         }
 
