@@ -349,6 +349,7 @@ namespace PubNubMessaging.Tests
                 {
                     bool found = false;
                     IList<object> responseFields = commonResponse as IList<object>;
+                    Console.WriteLine("response:" + commonResponse.ToString()); 
                     foreach (object item in responseFields)
                         {
                             if (item is Dictionary<string, object>)
