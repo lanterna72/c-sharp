@@ -225,6 +225,7 @@ namespace PubNubMessaging.Tests
                 Assert.Fail ("No response");
             }
             pubnub.EndPendingRequests();
+            Thread.Sleep(1000);
         }
 
         [Test]

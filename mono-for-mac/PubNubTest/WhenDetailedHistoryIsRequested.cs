@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using PubNubMessaging.Core;
+using System.Threading;
 
 namespace PubNubMessaging.Tests
 {
@@ -57,7 +58,7 @@ namespace PubNubMessaging.Tests
                     pubnub.Publish(channel, msg, common.DisplayReturnMessage, common.DisplayReturnMessageDummy);
 
                     common.WaitForResponse();
-
+                    Thread.Sleep(1000);
                     Console.WriteLine("Message # " + i.ToString() + " published");
                 }
         }
