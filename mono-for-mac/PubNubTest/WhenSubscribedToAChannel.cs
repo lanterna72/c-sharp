@@ -224,6 +224,7 @@ namespace PubNubMessaging.Tests
             } else {
                 Assert.Fail ("No response");
             }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -252,6 +253,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Test failed");
                 }
+            pubnub.EndPendingRequests();
         }
 
         bool ParseResponse(object response)
@@ -314,6 +316,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Test failed");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -351,6 +354,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Test failed");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -382,6 +386,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Test failed");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -436,6 +441,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Test failed");
                 }
+            pubnub.EndPendingRequests();
         }
     }
 }

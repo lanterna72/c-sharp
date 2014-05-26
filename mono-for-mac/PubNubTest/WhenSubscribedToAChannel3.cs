@@ -31,6 +31,7 @@ namespace PubNubMessaging.Tests
             } else {
                 Assert.Fail ("No response");
             }
+            pubnub.EndPendingRequests();
         }
 
         [Test]

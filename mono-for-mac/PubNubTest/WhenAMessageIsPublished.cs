@@ -44,6 +44,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -80,6 +81,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -118,6 +120,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -156,6 +159,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -192,6 +196,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -229,6 +234,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -266,6 +272,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -302,6 +309,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -316,6 +324,7 @@ namespace PubNubMessaging.Tests
                             );
 
             Assert.IsNotNull(pubnub.GenerateGuid());
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -340,6 +349,7 @@ namespace PubNubMessaging.Tests
             );
             Common common = new Common();
             Assert.AreEqual(true, pubnub.Publish(channel, message, common.DisplayReturnMessage, common.DisplayReturnMessage));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -357,6 +367,7 @@ namespace PubNubMessaging.Tests
             string message = "Pubnub API Usage Example";
             Common common = new Common();
             Assert.AreEqual(false, pubnub.Publish(channel, message, common.DisplayReturnMessage, common.DisplayReturnMessage));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -376,6 +387,7 @@ namespace PubNubMessaging.Tests
                 "key"
             );
             Assert.AreEqual(true, pubnub.Publish(channel, message, common.DisplayReturnMessage, common.DisplayReturnMessage));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -390,6 +402,7 @@ namespace PubNubMessaging.Tests
             string message = "Pubnub API Usage Example";
             Common common = new Common();
             Assert.AreEqual(true, pubnub.Publish(channel, message, common.DisplayReturnMessage, common.DisplayReturnMessage));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -407,6 +420,7 @@ namespace PubNubMessaging.Tests
             string message = "Pubnub API Usage Example";
             Common common = new Common();
             Assert.AreEqual(false, pubnub.Publish(channel, message, common.DisplayReturnMessage, common.DisplayReturnMessage));
+            pubnub.EndPendingRequests();
         }
 
         //[Test]

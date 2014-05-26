@@ -66,6 +66,7 @@ namespace PubNubMessaging.Tests
                         }
                     Assert.AreEqual(channel, responseFields [2]);
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -114,6 +115,7 @@ namespace PubNubMessaging.Tests
                         }
                     Assert.AreEqual(channel, responseFields [2]);
                 }
+            pubnub.EndPendingRequests();
         }
 
         /// <summary>
@@ -178,6 +180,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -198,6 +201,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -218,6 +222,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -238,6 +243,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -258,6 +264,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -278,6 +285,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -298,6 +306,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         //[Test]
@@ -318,6 +327,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, pubnub);
+            pubnub.EndPendingRequests();
         }
 
         void HereNow(Pubnub pubnub, string unitTestCaseName, 
@@ -338,6 +348,7 @@ namespace PubNubMessaging.Tests
             pubnub.HereNow(channel, userCallback, userCallback);
 
             pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
+            pubnub.EndPendingRequests();
         }
 
         public void ParseResponse(object commonResponse, Pubnub pubnub)
@@ -432,6 +443,7 @@ namespace PubNubMessaging.Tests
 
             ParseResponseWithState(common.Response, json, testname);
             pubnub.Unsubscribe<string>(channel, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy);
+            pubnub.EndPendingRequests();
         }
 
         public void ParseResponseWithState(object commonResponse, string userState, string testname)
@@ -468,6 +480,7 @@ namespace PubNubMessaging.Tests
             commonSubscribe.WaitForResponse(30);
 
             pubnub.HereNow<T>(channel, true, true, userCallback, errorCallback);
+            pubnub.EndPendingRequests();
 
         }
 
@@ -511,6 +524,7 @@ namespace PubNubMessaging.Tests
                         }
                 }
             pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -555,6 +569,7 @@ namespace PubNubMessaging.Tests
                         }
                 }
             pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -572,6 +587,7 @@ namespace PubNubMessaging.Tests
             pubnub.SetLocalUserState(channel, "testkey2", "testval2");
             pubnub.SetLocalUserState(channel, "testkey2", null);
             Assert.AreEqual("{\"testkey\":\"testval\"}", pubnub.GetLocalUserState(channel));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -587,6 +603,7 @@ namespace PubNubMessaging.Tests
             string channel = "testChannel2";
             pubnub.SetLocalUserState(channel, "testkey", "testval");
             Assert.AreEqual("{\"testkey\":\"testval\"}", pubnub.GetLocalUserState(channel));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -611,6 +628,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse(30);
 
             Assert.IsTrue(common.Response.ToString().Contains("{\"testkey\":\"testval\"}"));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -652,6 +670,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse(30);
             Console.WriteLine("Response GetUserState:" + common.Response.ToString());
             Assert.IsTrue(common.Response.ToString().Contains("{\"testkey\":\"testval\"}"));
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -698,7 +717,7 @@ namespace PubNubMessaging.Tests
                         }
                 }
             pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
-
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -780,6 +799,7 @@ namespace PubNubMessaging.Tests
                     Assert.Fail("Null response");
                 }
         }
+        pubnub.EndPendingRequests();
     }
 }
     

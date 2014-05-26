@@ -41,6 +41,7 @@ namespace PubNubMessaging.Tests
             common.WaitForResponse();
 
             ParseResponse(common.Response, 0, 0, message);
+            pubnub.EndPendingRequests();
         }
 
         public void SendMultipleIntMessages(int messageStart, int messageEnd, string channel, Pubnub pubnub)
@@ -143,6 +144,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n*********** DetailedHistory Messages Received*********** ");
 
             ParseResponse(common.Response, 0, 0, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -176,6 +178,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n*********** DetailedHistory Messages Received*********** ");
 
             ParseResponse(common.Response, 0, 0, message);
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -243,7 +246,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
       
             ParseResponse(common.Response, 0, totalMessages / 2, "");
-
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -311,6 +314,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
       
             ParseResponse(common.Response, 0, totalMessages / 2, "");
+            pubnub.EndPendingRequests();
         }
     
         [Test]
@@ -378,6 +382,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages / 2, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -445,7 +450,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages / 2, "");
-
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -487,6 +492,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -528,6 +534,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n*********** DetailedHistory Messages Received*********** ");
 
             ParseResponse(common.Response, 0, totalMessages, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -595,7 +602,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages / 2, "");
-
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -663,6 +670,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages / 2, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -730,6 +738,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages / 2, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -797,7 +806,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages / 2, "");
-
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -839,6 +848,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n******* DetailedHistory Messages Received ******* ");
 
             ParseResponse(common.Response, 0, totalMessages, "");
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -880,6 +890,7 @@ namespace PubNubMessaging.Tests
             Console.WriteLine("\n*********** DetailedHistory Messages Received*********** ");
 
             ParseResponse(common.Response, 0, totalMessages, "");
+            pubnub.EndPendingRequests();
         }
 
     }

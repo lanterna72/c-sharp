@@ -36,6 +36,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail();
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -69,6 +70,7 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail();
                 }    
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -101,7 +103,8 @@ namespace PubNubMessaging.Tests
                 } else
                 {
                     Assert.Fail();
-                }    
+                }  
+            pubnub.EndPendingRequests();  
         }
 
         [Test]
@@ -162,6 +165,7 @@ namespace PubNubMessaging.Tests
                             Unsub(common, pubnub, channel);
                         }
                 }
+            pubnub.EndPendingRequests();
         }
 
         private void Unsub(Common common, Pubnub pubnub, string channel)
@@ -197,6 +201,7 @@ namespace PubNubMessaging.Tests
                             Assert.True(channel.Equals(responseFields2 [2]) && responseFields2 [0].ToString().Contains("leave"));
                         }
                 }
+            pubnub.EndPendingRequests();
         }
 
         [Test]
@@ -243,6 +248,7 @@ namespace PubNubMessaging.Tests
                             Unsub(common, pubnub, channel);
                         }
                 }
+            pubnub.EndPendingRequests();
         }
     }
 }
