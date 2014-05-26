@@ -400,7 +400,7 @@ namespace PubNubMessaging.Tests
                         } else
                         {
                             Console.WriteLine("response:" + commonResponse.ToString()); 
-                            Assert.Fail("Test failed");
+                    Assert.Fail("Test failed:" + commonResponse.ToString());
                         }
                     /*Dictionary<string, object> message = (Dictionary<string, object>)responseFields [3];
 
@@ -458,7 +458,7 @@ namespace PubNubMessaging.Tests
                             Assert.True(true, "Test passed:" + testname);
                         } else
                         {
-                            Assert.Fail("Test failed:" + testname);
+                    Assert.Fail("Test failed:" +userState + testname + commonResponse.ToString());
                         }
                 }
         }
