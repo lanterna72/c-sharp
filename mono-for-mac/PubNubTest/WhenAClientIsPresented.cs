@@ -440,7 +440,7 @@ namespace PubNubMessaging.Tests
 
 			//string json = pubnub.GetLocalUserState(channel);
 
-			ParseResponseWithState(common.Response, "{\"testkey\": \"testval\"}", testname);
+            ParseResponseWithState(common.Response, "{\"testkey\":\"testval\"}", testname);
             pubnub.Unsubscribe<string>(channel, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy);
             pubnub.EndPendingRequests();
         }
