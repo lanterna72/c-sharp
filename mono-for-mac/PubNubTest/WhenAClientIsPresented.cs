@@ -343,12 +343,11 @@ namespace PubNubMessaging.Tests
             commonSubscribe.Response = null;
 
 
-            commonSubscribe.WaitForResponse(30);
+			commonSubscribe.WaitForResponse(45);
 
             pubnub.HereNow(channel, userCallback, userCallback);
 
             pubnub.Unsubscribe<string>(channel, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy, commonSubscribe.DisplayReturnMessageDummy);
-            pubnub.EndPendingRequests();
         }
 
         public void ParseResponse(object commonResponse, Pubnub pubnub)
@@ -439,9 +438,9 @@ namespace PubNubMessaging.Tests
             HereNowWithState<string>(pubnub, channel, testname, common.DisplayReturnMessage, common.DisplayErrorMessage);
             common.WaitForResponse();
 
-            string json = pubnub.GetLocalUserState(channel);
+			//string json = pubnub.GetLocalUserState(channel);
 
-            ParseResponseWithState(common.Response, json, testname);
+			ParseResponseWithState(common.Response, "{\"testkey\": \"testval\"}", testname);
             pubnub.Unsubscribe<string>(channel, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy, common.DisplayReturnMessageDummy);
             pubnub.EndPendingRequests();
         }
@@ -474,14 +473,12 @@ namespace PubNubMessaging.Tests
             commonSubscribe.DeliveryStatus = false;
             commonSubscribe.Response = null;
 
-            pubnub.SetLocalUserState(channel, "testkey", "testval");
+			//pubnub.SetLocalUserState(channel, "testkey", "testval");
             string json = pubnub.GetLocalUserState(channel);
-            pubnub.SetUserState<string>(channel, json, commonSubscribe.DisplayReturnMessage, commonSubscribe.DisplayErrorMessage);
+			pubnub.SetUserState<string>(channel, "{\"testkey\": \"testval\"}", commonSubscribe.DisplayReturnMessage, commonSubscribe.DisplayErrorMessage);
             commonSubscribe.WaitForResponse(30);
 
             pubnub.HereNow<T>(channel, true, true, userCallback, errorCallback);
-            pubnub.EndPendingRequests();
-
         }
 
         [Test]
