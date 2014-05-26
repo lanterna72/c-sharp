@@ -798,8 +798,8 @@ namespace PubNubMessaging.Tests
                 {
                     Assert.Fail("Null response");
                 }
+            pubnub.EndPendingRequests();
         }
-        pubnub.EndPendingRequests();
     }
 }
     
